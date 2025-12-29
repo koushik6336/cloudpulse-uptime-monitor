@@ -1,0 +1,16 @@
+STEP 1:
+A static website is hosted using Amazon S3.
+
+STEP 2:
+Amazon EventBridge is configured to run every 5 minutes.
+
+STEP 3:
+EventBridge automatically triggers an AWS Lambda function.
+
+STEP 4:
+The Lambda function sends an HTTP request to the website and measures:
+- Availability (UP/DOWN)
+- Response time (latency)
+
+STEP 5:
+The monitoring results are stored in Amazon DynamoDB for historical tracking.
