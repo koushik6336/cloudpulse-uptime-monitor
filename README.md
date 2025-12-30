@@ -34,6 +34,10 @@ cloudpulse-uptime-monitor/
 - Lambda function implemented
 - Data stored in DynamoDB
 
+- ## Day 5 – Latency Trend Detection
+The system analyzes historical latency data stored in DynamoDB 
+and detects performance degradation using moving average comparison.
+
 ## Technologies Used
 - AWS Lambda
 - Amazon S3
