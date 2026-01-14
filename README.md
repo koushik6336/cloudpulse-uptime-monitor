@@ -1,52 +1,178 @@
-# project title : CloudPulse – Serverless Uptime & Latency Monitor
 
-## Project Overview
-CloudPulse is a serverless monitoring system built on AWS that automatically checks whether a website is up or down and measures its response time.
+---
 
-## Architecture
-- Amazon S3 – Hosts the static website
-- Amazon EventBridge – Runs every 5 minutes
-- AWS Lambda – Checks uptime and latency
-- Amazon DynamoDB – Stores monitoring results
+# 🟢 DAY 1 — STATIC WEBSITE HOSTING
 
-## Workflow
-1. A static website is hosted on Amazon S3.
-2. Amazon EventBridge triggers every 5 minutes.
-3. EventBridge invokes an AWS Lambda function.
-4. Lambda checks website availability and response time.
-5. Results are stored in DynamoDB.
+### What was done
+- Created a static website using HTML and CSS.
+- Hosted the website using **Amazon S3**.
 
-## Project Structure
-cloudpulse-uptime-monitor/
-├── lambda/
-│   └── uptime_check.py
-├── website/
-│   ├── index.html
-│   └── style.css
-├── architecture/
-│   └── architecture-flow.txt
-├── README.md
-└── .gitignore
+### Outcome
+- Website accessible publicly.
+- Base system to monitor is ready.
 
-## Current Status (Till Day 4)
-- Website hosted on Amazon S3
-- Automated monitoring every 5 minutes
-- Lambda function implemented
-- Data stored in DynamoDB
+---
 
-- ## Day 5 – Latency Trend Detection
-The system analyzes historical latency data stored in DynamoDB 
-and detects performance degradation using moving average comparison.
+# 🟢 DAY 2 — EVENT-DRIVEN MONITORING
 
-## Technologies Used
-- AWS Lambda
+### What was done
+- Created an **AWS Lambda** function.
+- Lambda sends HTTP request to the website.
+- Measures:
+  - HTTP status code
+  - Response time (latency)
+
+### Outcome
+- Automated website checking logic created.
+
+---
+
+# 🟢 DAY 3 — DATA STORAGE WITH DYNAMODB
+
+### What was done
+- Created a DynamoDB table.
+- Used:
+  - **Partition Key (pk)** → Website identifier
+  - **Sort Key (sk)** → Timestamp
+- Lambda stores:
+  - Status (UP / DOWN)
+  - Latency
+  - Error (if any)
+
+### Outcome
+- Historical monitoring data stored reliably.
+
+---
+
+# 🟢 DAY 4 — AUTOMATION WITH EVENTBRIDGE
+
+### What was done
+- Configured Amazon EventBridge.
+- Lambda runs automatically every 5 minutes.
+
+### Outcome
+- Fully automated monitoring without manual execution.
+
+---
+
+# 🟢 DAY 5 — LATENCY TREND DETECTION
+
+### What was done
+- Lambda fetches last 10 latency records from DynamoDB.
+- Splits data into:
+  - Older latency values
+  - Recent latency values
+- Calculates average for both.
+- Compares averages.
+
+### Logic
+If Recent Avg > Older Avg → DEGRADING
+Else → NORMAL
+
+
+### Outcome
+- Detects performance degradation **before downtime occurs**.
+
+---
+
+# 🟢 DAY 6 — UPTIME SLA CALCULATION
+
+### What was done
+- Lambda reads last 50 monitoring records.
+- Counts:
+  - Total checks
+  - UP checks
+- Calculates SLA using:
+
+Uptime % = (UP checks / Total checks) × 100
+
+
+- Publishes SLA metric to CloudWatch.
+
+### Outcome
+- Business-grade uptime percentage calculation.
+
+---
+
+# 🟢 DAY 7 — SMART ALERTING (SNS)
+
+### What was done
+- Integrated **Amazon SNS** for alerts.
+- Alerts are triggered only when:
+  - Website is DOWN for 3 consecutive checks
+  - OR latency exceeds threshold repeatedly
+
+### Why this matters
+- Avoids alert spam.
+- Sends alerts only when issue is real.
+
+### Outcome
+- Intelligent, production-like alerting system.
+
+---
+
+# 🟢 DAY 8 — AUTO-RECOVERY (SELF-HEALING)
+
+### What was done
+- Added auto-recovery logic.
+- If website is DOWN for **7 consecutive checks**:
+  - Lambda triggers **CloudFront cache invalidation**
+  - Attempts automatic recovery
+  - Sends recovery notification via SNS
+
+### Why auto-recovery is needed
+- Humans may miss alerts.
+- System attempts recovery automatically.
+- Reduces downtime without manual intervention.
+
+### Outcome
+- Monitoring + Action combined.
+- SRE-level self-healing feature implemented.
+
+---
+
+## 📊 Monitoring & Visualization
+- CloudWatch dashboards show:
+  - Website latency graph
+  - Uptime SLA percentage
+- Supports:
+  - 1 hour
+  - 3 hours
+  - Daily / weekly views
+
+---
+
+## 🛠️ Technologies Used
+- AWS Lambda (Python)
 - Amazon S3
+- Amazon CloudFront
 - Amazon EventBridge
 - Amazon DynamoDB
+- Amazon CloudWatch
+- Amazon SNS
 
-## Future Enhancements
-- Latency trend detection
-- SLA calculation
-- Alerting using Amazon SNS
+---
+
+## 🎯 Key Learnings
+- Serverless architecture
+- Event-driven design
+- DynamoDB data modeling
+- CloudWatch custom metrics
+- Intelligent alerting
 - Auto-recovery mechanisms
+- Real-world SRE concepts
 
+---
+
+## 🔮 Future Enhancements
+- Multi-website monitoring
+- Region-wise health checks
+- Monthly SLA reports
+- QuickSight dashboards
+- Incident history analysis
+
+---
+
+## ✅ Project Status
+**Completed successfully (Day 1 to Day 8)**  
+All features tested and validated.
