@@ -1,3 +1,45 @@
+# CloudPulse – Serverless Uptime & Latency Monitoring System
+
+## 📌 Project Title
+**CloudPulse – Serverless Uptime, Latency Monitoring, Alerting & Auto-Recovery System**
+
+---
+
+## 📖 Project Overview
+CloudPulse is a fully serverless monitoring system built using AWS services.  
+It continuously checks whether a website is **UP or DOWN**, measures **response latency**, analyzes **performance trends**, calculates **uptime SLA**, sends **intelligent alerts**, and performs **automatic recovery actions** when failures persist.
+
+The project follows **SRE (Site Reliability Engineering)** principles such as:
+- Monitoring
+- Alerting
+- SLA measurement
+- Self-healing (auto-recovery)
+
+No servers are managed manually.
+
+---
+
+## 🏗️ Overall Architecture
+- **Amazon S3** – Hosts the static website
+- **Amazon CloudFront** – Serves the website securely over HTTPS
+- **Amazon EventBridge** – Schedules monitoring every 5 minutes
+- **AWS Lambda** – Executes monitoring, analysis, alerting & recovery logic
+- **Amazon DynamoDB** – Stores historical monitoring records
+- **Amazon CloudWatch** – Displays latency & SLA metrics
+- **Amazon SNS** – Sends alert and recovery notifications
+
+---
+
+## 🔄 High-Level Workflow
+1. Website is hosted on Amazon S3 and served via CloudFront.
+2. EventBridge triggers Lambda every 5 minutes.
+3. Lambda sends HTTP request to the website.
+4. Lambda measures:
+   - Availability (UP / DOWN)
+   - Response time (latency)
+5. Results are stored in DynamoDB.
+6. CloudWatch metrics are updated.
+7. Alerts or recovery actions are triggered if needed.
 
 ---
 
