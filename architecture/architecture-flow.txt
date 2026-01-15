@@ -1,16 +1,61 @@
+CloudPulse Architecture  
+
 STEP 1:
 A static website is hosted using Amazon S3.
 
 STEP 2:
-Amazon EventBridge is configured to run every 5 minutes.
+Amazon CloudFront is used to deliver the website globally with low latency and caching.
 
 STEP 3:
-EventBridge automatically triggers an AWS Lambda function.
+Amazon EventBridge is configured to run on a fixed schedule (every 5 minutes).
 
 STEP 4:
-The Lambda function sends an HTTP request to the website and measures:
-- Availability (UP/DOWN)
-- Response time (latency)
+EventBridge automatically triggers an AWS Lambda function.
 
 STEP 5:
-The monitoring results are stored in Amazon DynamoDB for historical tracking.
+The Lambda function sends an HTTP request to the website and measures:
+
+Website availability (UP / DOWN)
+
+Response time (latency in milliseconds)
+
+STEP 6:
+Each monitoring result is stored in Amazon DynamoDB, including:
+
+Timestamp
+
+Status (UP/DOWN)
+
+Latency value
+This enables historical tracking.
+
+STEP 7 (Day 5 – Latency Trend Detection):
+Lambda reads recent latency records from DynamoDB and compares:
+
+Recent average latency
+
+Older average latency
+to detect performance degradation trends.
+
+STEP 8 (Day 6 – SLA Calculation):
+Lambda calculates uptime SLA percentage using stored records:
+
+Uptime SLA = (UP checks / Total checks) × 100
+
+
+STEP 9 (Day 7 – Smart Alerting):
+Lambda analyzes recent results and sends Amazon SNS alerts only when:
+
+The website is DOWN for multiple consecutive checks, or
+
+High latency occurs repeatedly
+This avoids noisy alerts.
+
+STEP 10 (Day 8 – Auto-Recovery):
+If failures continue beyond a higher threshold:
+
+Lambda automatically triggers a CloudFront cache invalidation
+
+This refreshes content from S3
+
+Recovery actions are logged and notified via SNS
